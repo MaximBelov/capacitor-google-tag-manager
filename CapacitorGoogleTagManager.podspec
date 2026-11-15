@@ -17,4 +17,6 @@ Pod::Spec.new do |s|
   # Any 9.x from 9.1.0, as in Package.swift. An app pins another one in its Podfile: pod 'GoogleTagManager', '9.3.0'
   s.dependency 'GoogleTagManager', '~> 9.1'
   s.swift_version = '5.9'
+  # The SDK's categories, as Package.swift's -ObjC; CocoaPods' own default already adds it for most apps.
+  s.user_target_xcconfig = { 'OTHER_LDFLAGS' => '$(inherited) -ObjC' }
 end

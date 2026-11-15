@@ -75,8 +75,10 @@ Google ships the iOS SDK as a static archive, and an app never calls it: `TAGMan
 takes a member of a static archive only when something references a symbol it defines, and Swift Package Manager links
 without `-ObjC`, so an app that merely depends on the package gets the SDK's (empty) framework folder in its bundle and
 none of its code. The plugin's `GoogleTagManagerLinkage` target references every class the SDK exports, which makes the
-linker take them; `isAvailable` then looks each of them up in the running app. CocoaPods links with `-ObjC` and is
-unaffected either way.
+linker take them, and links with `-ObjC`, which takes the SDK's categories as well: they add class methods from object
+files no class reference pulls in, and without them the first container load aborts the app with
+`+[... runtimeScript]: unrecognized selector`. `isAvailable` then looks each class up in the running app. CocoaPods links
+with `-ObjC` for most apps, and the podspec asks for it too.
 
 ## Use
 

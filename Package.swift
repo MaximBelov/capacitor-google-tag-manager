@@ -18,13 +18,18 @@ let package = Package(
         .package(url: "https://github.com/googleanalytics/google-tag-manager-ios-sdk.git", "9.1.0"..<"10.0.0")
     ],
     targets: [
-        // References the SDK's classes so the linker takes its static archive into the app (see the .m file).
+        // References the SDK's classes so the linker takes its static archive into the app (see the .m file), and
+        // links with -ObjC so the archive's categories come too. A class reference loads only the object file that
+        // defines the class; the SDK adds class methods in categories that live in other object files, and without
+        // them the container's first load ends in "+[... runtimeScript]: unrecognized selector" and the app aborts.
+        // CocoaPods sets -ObjC for every app, which is why the SDK worked there; SwiftPM does not.
         .target(
             name: "GoogleTagManagerLinkage",
             dependencies: [
                 .product(name: "GoogleTagManager", package: "google-tag-manager-ios-sdk")
             ],
-            path: "ios/Sources/GoogleTagManagerLinkage"),
+            path: "ios/Sources/GoogleTagManagerLinkage",
+            linkerSettings: [.unsafeFlags(["-ObjC"])]),
         .target(
             name: "GoogleTagManagerPlugin",
             dependencies: [
