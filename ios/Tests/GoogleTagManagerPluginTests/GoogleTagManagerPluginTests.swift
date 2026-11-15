@@ -22,10 +22,12 @@ final class GoogleTagManagerPluginTests: XCTestCase {
     /// The test bundle links the plugin the way an app does, so the SDK has to be found here: a dependency that is
     /// declared but never reaches the binary fails this rather than a phone.
     func testFindsTheSdkInTheBinary() {
+        XCTAssertTrue(TagManagerSdk.linkedClassNames.contains("TAGManager"))
         XCTAssertTrue(TagManagerSdk.isLinked())
     }
 
     func testReportsAClassThatIsNotThereAsMissing() {
-        XCTAssertFalse(TagManagerSdk.isLinked(className: "TAGNoSuchClass"))
+        XCTAssertFalse(TagManagerSdk.isLinked(classNames: ["TAGManager", "TAGNoSuchClass"]))
+        XCTAssertFalse(TagManagerSdk.isLinked(classNames: []))
     }
 }

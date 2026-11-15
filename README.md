@@ -69,6 +69,15 @@ The plugin brings the SDK and nothing that belongs to one app:
 
 The app should not declare the SDK itself as well: the plugin's declaration is the only one needed.
 
+### Why declaring the iOS SDK is not enough
+
+Google ships the iOS SDK as a static archive, and an app never calls it: `TAGManager` starts itself from `+load`. A linker
+takes a member of a static archive only when something references a symbol it defines, and Swift Package Manager links
+without `-ObjC`, so an app that merely depends on the package gets the SDK's (empty) framework folder in its bundle and
+none of its code. The plugin's `GoogleTagManagerLinkage` target references every class the SDK exports, which makes the
+linker take them; `isAvailable` then looks each of them up in the running app. CocoaPods links with `-ObjC` and is
+unaffected either way.
+
 ## Use
 
 ```typescript

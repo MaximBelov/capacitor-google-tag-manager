@@ -11,6 +11,7 @@ Pod::Spec.new do |s|
   s.author = package['author']
   s.source = { :git => package['repository']['url'], :tag => s.version.to_s }
   s.source_files = 'ios/Sources/**/*.{swift,h,m,c,cc,mm,cpp}'
+  s.public_header_files = 'ios/Sources/GoogleTagManagerLinkage/include/*.h'
   s.ios.deployment_target = '15.0'
   s.dependency 'Capacitor'
   # Any 9.x from 9.1.0, as in Package.swift. An app pins another one in its Podfile: pod 'GoogleTagManager', '9.3.0'

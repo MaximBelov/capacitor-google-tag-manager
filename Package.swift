@@ -18,12 +18,19 @@ let package = Package(
         .package(url: "https://github.com/googleanalytics/google-tag-manager-ios-sdk.git", "9.1.0"..<"10.0.0")
     ],
     targets: [
+        // References the SDK's classes so the linker takes its static archive into the app (see the .m file).
+        .target(
+            name: "GoogleTagManagerLinkage",
+            dependencies: [
+                .product(name: "GoogleTagManager", package: "google-tag-manager-ios-sdk")
+            ],
+            path: "ios/Sources/GoogleTagManagerLinkage"),
         .target(
             name: "GoogleTagManagerPlugin",
             dependencies: [
+                "GoogleTagManagerLinkage",
                 .product(name: "Capacitor", package: "capacitor-swift-pm"),
-                .product(name: "Cordova", package: "capacitor-swift-pm"),
-                .product(name: "GoogleTagManager", package: "google-tag-manager-ios-sdk")
+                .product(name: "Cordova", package: "capacitor-swift-pm")
             ],
             path: "ios/Sources/GoogleTagManagerPlugin"),
         .testTarget(

@@ -53,6 +53,8 @@ test('both platforms answer with the field the API declares', () => {
 test('every install route depends on the Tag Manager SDK', () => {
   assert.match(read('Package.swift'), /google-tag-manager-ios-sdk\.git", "9\.1\.0"\.\.<"10\.0\.0"/);
   assert.match(read('Package.swift'), /\.product\(name: "GoogleTagManager", package: "google-tag-manager-ios-sdk"\)/);
+  // Declared is not linked: the SDK is a static archive nobody calls, so the linkage target references its entry point.
+  assert.match(read('ios/Sources/GoogleTagManagerLinkage/GoogleTagManagerLinkage.m'), /\[TAGManager class\]/);
   assert.match(read('CapacitorGoogleTagManager.podspec'), /s\.dependency 'GoogleTagManager', '~> 9\.1'/);
   assert.match(
     read('android/build.gradle'),

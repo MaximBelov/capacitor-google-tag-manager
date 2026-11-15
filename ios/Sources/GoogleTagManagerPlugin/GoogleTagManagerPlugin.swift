@@ -1,14 +1,20 @@
 import Foundation
 import Capacitor
+#if canImport(GoogleTagManagerLinkage)
+import GoogleTagManagerLinkage
+#endif
 
 /// Whether the Tag Manager SDK's classes are in the running app.
 enum TagManagerSdk {
-    /// The SDK's entry point. Its header is not public, so it is looked up by name; the name is what the SDK's own
-    /// binary exports (`_OBJC_CLASS_$_TAGManager`).
-    static let managerClassName = "TAGManager"
+    /// The classes the plugin links in. Calling this is also what keeps the linkage in the binary.
+    static var linkedClassNames: [String] {
+        GoogleTagManagerLinkedClassNames()
+    }
 
-    static func isLinked(className: String = managerClassName) -> Bool {
-        NSClassFromString(className) != nil
+    /// Asks the Objective-C runtime, by name, for every class the plugin links in, so the answer reflects the binary
+    /// that is running rather than what the plugin was compiled against.
+    static func isLinked(classNames: [String] = linkedClassNames) -> Bool {
+        !classNames.isEmpty && classNames.allSatisfy { NSClassFromString($0) != nil }
     }
 }
 

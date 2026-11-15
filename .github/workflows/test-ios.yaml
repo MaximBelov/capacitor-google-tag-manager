@@ -38,8 +38,14 @@ jobs:
       - run: npm run example:ios:build
       - name: The plugin is in the app's Swift package
         run: grep -q 'CapacitorGoogleTagManager' example-app/ios/App/CapApp-SPM/Package.swift
-      - name: The app binary carries the SDK
-        run: nm -U build/example-ios/Build/Products/Debug-iphoneos/App.app/App | grep -q '_OBJC_CLASS_\$_TAGManager'
+      # Linked, not merely embedded: the SDK is a static archive that nothing calls, so without the plugin's linkage target
+      # the app carries an empty GoogleTagManager.framework and no TAG class. A debug build keeps its code in App.debug.dylib.
+      - name: The app binary carries the SDK's classes
+        run: |
+          app=build/example-ios/Build/Products/Debug-iphoneos/App.app
+          for binary in "$app/App" "$app/App.debug.dylib"; do
+            [ -f "$binary" ] && otool -v -s __TEXT __objc_classname "$binary"
+          done | grep -q 'TAGManager'
       - name: Stop what the build left running
         if: always()
         run: pkill -f '[x]codebuild' || true
