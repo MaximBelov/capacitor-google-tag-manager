@@ -1,0 +1,8 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--
+      Nothing to declare here. The Tag Manager SDK's own manifest (play-services-tagmanager-api) brings TagManagerService,
+      the INTERNET and ACCESS_NETWORK_STATE permissions, and TagManagerPreviewActivity with its
+      tagmanager.c.${applicationId} scheme, and the app's manifest merge puts the app's id into that scheme. A second
+      declaration of the activity here would only be merged into the same element.
+    -->
+</manifest>

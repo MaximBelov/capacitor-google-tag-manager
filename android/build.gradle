@@ -1,0 +1,64 @@
+ext {
+    junitVersion = project.hasProperty('junitVersion') ? rootProject.ext.junitVersion : '4.13.2'
+    // The Tag Manager SDK this plugin brings. An app that needs another version sets playServicesTagManagerVersion in its
+    // variables.gradle, the way it sets the Capacitor versions; Gradle resolves one version for the whole app either way.
+    playServicesTagManagerVersion = project.hasProperty('playServicesTagManagerVersion') ? rootProject.ext.playServicesTagManagerVersion : '18.3.0'
+}
+
+buildscript {
+    ext.kotlin_version = project.hasProperty("kotlin_version") ? rootProject.ext.kotlin_version : '2.2.20'
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:9.5.1'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+android {
+    namespace = "io.github.maximbelov.googletagmanager"
+    compileSdk = project.hasProperty('compileSdkVersion') ? rootProject.ext.compileSdkVersion : 36
+    defaultConfig {
+        minSdkVersion project.hasProperty('minSdkVersion') ? rootProject.ext.minSdkVersion : 26
+        targetSdkVersion project.hasProperty('targetSdkVersion') ? rootProject.ext.targetSdkVersion : 36
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    lintOptions {
+        abortOnError = false
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
+    }
+}
+
+kotlin {
+    jvmToolchain(21)
+}
+
+repositories {
+    google()
+    mavenCentral()
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':capacitor-android')
+    // The whole point of the plugin. Its manifest (play-services-tagmanager-api) declares TagManagerService and
+    // TagManagerPreviewActivity, the latter with the tagmanager.c.${applicationId} scheme, which the app's manifest merge
+    // resolves to the app's own id, so the plugin's manifest repeats neither.
+    implementation "com.google.android.gms:play-services-tagmanager:$playServicesTagManagerVersion"
+    testImplementation "junit:junit:$junitVersion"
+}

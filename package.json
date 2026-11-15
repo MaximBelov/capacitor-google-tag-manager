@@ -1,0 +1,95 @@
+{
+  "name": "capacitor-google-tag-manager",
+  "version": "0.1.0",
+  "description": "Brings the Google Tag Manager SDK into a Capacitor app on Android and iOS, with its preview activity, so a container shipped with the app is loaded",
+  "main": "dist/plugin.cjs.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/esm/index.d.ts",
+  "unpkg": "dist/plugin.js",
+  "files": [
+    "android/src/main/",
+    "android/build.gradle",
+    "dist/",
+    "ios/Sources",
+    "ios/Tests",
+    "Package.swift",
+    "CapacitorGoogleTagManager.podspec"
+  ],
+  "author": "Maxim Belov",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MaximBelov/capacitor-google-tag-manager.git"
+  },
+  "bugs": {
+    "url": "https://github.com/MaximBelov/capacitor-google-tag-manager/issues"
+  },
+  "keywords": [
+    "capacitor",
+    "plugin",
+    "native",
+    "google-tag-manager",
+    "gtm",
+    "tag-manager",
+    "firebase-analytics"
+  ],
+  "scripts": {
+    "verify": "npm run verify:ios && npm run verify:android && npm run verify:web",
+    "verify:ios": "xcodebuild build -scheme CapacitorGoogleTagManager -destination generic/platform=iOS -derivedDataPath build/ios-device",
+    "verify:android": "cd android && ./gradlew clean build test",
+    "verify:web": "npm run build",
+    "lint": "npm run eslint && npm run prettier -- --check && npm run swiftlint -- lint",
+    "fmt": "npm run eslint -- --fix && npm run prettier -- --write && npm run swiftlint -- --fix --format",
+    "eslint": "eslint",
+    "prettier": "prettier \"**/*.{css,html,ts,js,java}\" --plugin=prettier-plugin-java",
+    "swiftlint": "node-swiftlint",
+    "docgen": "docgen --api GoogleTagManagerPlugin --output-readme README.md --output-json dist/docs.json",
+    "build": "npm run clean && npm run docgen && tsc && rollup -c rollup.config.mjs",
+    "clean": "rimraf ./dist",
+    "watch": "tsc --watch",
+    "prepublishOnly": "npm run build",
+    "test": "npm run test:unit",
+    "test:unit": "vitest run",
+    "test:unit:coverage": "vitest run --coverage",
+    "test:parity": "node --test test/unit/platform-parity.test.mjs",
+    "test:android": "cd android && ./gradlew test",
+    "test:ios": "./scripts/test-ios.sh",
+    "example:install": "cd example-app && npm install --no-audit --no-fund",
+    "example:android:build": "npm run example:install && cd example-app && npm run build && npx cap sync android && cd android && ./gradlew assembleDebug",
+    "example:ios:build": "npm run example:install && cd example-app && npm run build && npx cap sync ios && xcodebuild build -project ios/App/App.xcodeproj -scheme App -destination generic/platform=iOS -derivedDataPath ../build/example-ios CODE_SIGNING_ALLOWED=NO"
+  },
+  "devDependencies": {
+    "@capacitor/android": "^8.0.0",
+    "@capacitor/core": "^8.0.0",
+    "@capacitor/docgen": "^0.3.1",
+    "@capacitor/ios": "^8.0.0",
+    "@ionic/eslint-config": "^0.5.0",
+    "@ionic/prettier-config": "^4.0.0",
+    "@ionic/swiftlint-config": "^2.0.0",
+    "eslint": "^10.14.0",
+    "prettier": "^3.6.2",
+    "prettier-plugin-java": "^2.7.7",
+    "rimraf": "^6.1.0",
+    "rollup": "^4.53.2",
+    "swiftlint": "^2.0.0",
+    "typescript": "~6.0.3",
+    "@vitest/coverage-v8": "^5.1.0",
+    "vitest": "^5.1.0"
+  },
+  "peerDependencies": {
+    "@capacitor/core": ">=8.0.0"
+  },
+  "prettier": "@ionic/prettier-config",
+  "swiftlint": "@ionic/swiftlint-config",
+  "capacitor": {
+    "ios": {
+      "src": "ios"
+    },
+    "android": {
+      "src": "android"
+    }
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

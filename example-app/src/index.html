@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Tag Manager</title>
+    <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0" />
+    <style>
+      body { font-family: system-ui, sans-serif; margin: 16px; padding-top: env(safe-area-inset-top); }
+      button { display: block; margin: 6px 0; font-size: 16px; }
+      pre { white-space: pre-wrap; font-size: 13px; background: #f3f3f3; padding: 8px; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Tag Manager</h1>
+      <p>
+        Tells whether the Google Tag Manager SDK is in this build. The SDK loads a container the app ships and acts on Firebase
+        Analytics events by itself; this app ships no container and configures no Firebase, so it only proves the SDK is linked.
+      </p>
+      <button id="available">Is the SDK in this app?</button>
+      <pre id="log"></pre>
+    </main>
+    <script src="./js/example.js" type="module"></script>
+  </body>
+</html>

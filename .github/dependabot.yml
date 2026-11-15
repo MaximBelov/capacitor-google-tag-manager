@@ -1,0 +1,32 @@
+# The pins this repository carries, moved by Dependabot: the npm toolchain (Capacitor included), the Gradle build of
+# android/ with the Tag Manager SDK it depends on (play-services-tagmanager), the Swift packages Package.swift names
+# (Capacitor's and Google's Tag Manager package, whose 9.x range an app resolves itself), and the actions the workflows use.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      capacitor:
+        patterns: ['@capacitor/*']
+      tooling:
+        patterns: ['*']
+        exclude-patterns: ['@capacitor/*']
+    ignore:
+      # TypeScript 7 is the native compiler and has no JavaScript API, which typescript-eslint needs: its peer range
+      # stops below 6.1. Lift this when typescript-eslint supports 7.
+      - dependency-name: typescript
+        versions: ['>=6.1.0']
+  - package-ecosystem: gradle
+    directory: /android
+    schedule:
+      interval: weekly
+  - package-ecosystem: swift
+    directory: /
+    schedule:
+      interval: weekly
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly

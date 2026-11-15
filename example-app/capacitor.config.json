@@ -1,0 +1,5 @@
+{
+  "appId": "com.example.plugin",
+  "appName": "Tag Manager",
+  "webDir": "dist"
+}
