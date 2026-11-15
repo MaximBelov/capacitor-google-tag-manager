@@ -32,4 +32,14 @@ describe('on a native platform', () => {
     nativePromise.mockResolvedValueOnce({ available: false });
     await expect(GoogleTagManager.isAvailable()).resolves.toEqual({ available: false });
   });
+
+  // ExceptionCode.Unimplemented, spelt out: importing @capacitor/core here would set Capacitor up before the bridge is faked.
+  it('rejects the web-only methods with UNIMPLEMENTED, without asking the native plugin or falling back to the web', async () => {
+    nativePromise.mockClear();
+    await expect(GoogleTagManager.start({ containerId: 'GTM-TEST' })).rejects.toMatchObject({
+      code: 'UNIMPLEMENTED',
+    });
+    await expect(GoogleTagManager.push({ event: 'native' })).rejects.toMatchObject({ code: 'UNIMPLEMENTED' });
+    expect(nativePromise).not.toHaveBeenCalled();
+  });
 });

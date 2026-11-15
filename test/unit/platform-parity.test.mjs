@@ -1,12 +1,15 @@
 // Every method of the TypeScript API has its native method on both platforms and its section in the README, and neither
 // platform has a method the API does not declare. A miss on either side compiles fine and fails only on a phone. Plain
-// Node, no install. addListener and removeAllListeners come from Capacitor's base classes and are left out.
+// Node, no install. addListener and removeAllListeners come from Capacitor's base classes and are left out. The methods
+// that drive gtm.js exist only on the web, by design: they are named here, and must stay out of both native plugins (a
+// native method of the same name would take the call away from Capacitor's UNIMPLEMENTED answer).
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
 const read = (path) => readFileSync(new URL(`../../${path}`, import.meta.url), 'utf8');
 const inherited = new Set(['addListener', 'removeAllListeners']);
+const webOnly = ['push', 'start'];
 
 const definitions = read('src/definitions.ts');
 const api = [...definitions.matchAll(/^\s+(\w+)\([^)]*\):\s*Promise</gm)]
@@ -20,21 +23,40 @@ const iosFunctions = [...swift.matchAll(/@objc (?:override )?(?:public )?func (\
   .map((m) => m[1])
   .sort();
 const android = [...kotlin.matchAll(/@PluginMethod\s+(?:override\s+)?fun (\w+)\(/g)].map((m) => m[1]).sort();
+const native = api.filter((name) => !webOnly.includes(name));
 
 test('the API declares its methods', () => {
-  assert.deepEqual(api, ['isAvailable']);
+  assert.deepEqual(api, ['isAvailable', 'push', 'start']);
 });
 
-test('iOS registers exactly the methods of the API', () => {
-  assert.deepEqual(ios, api);
+test('iOS registers exactly the native methods of the API', () => {
+  assert.deepEqual(ios, native);
 });
 
 test('iOS has an @objc function for every registered method', () => {
-  assert.deepEqual(iosFunctions, api);
+  assert.deepEqual(iosFunctions, native);
 });
 
-test('Android annotates exactly the methods of the API', () => {
-  assert.deepEqual(android, api);
+test('Android annotates exactly the native methods of the API', () => {
+  assert.deepEqual(android, native);
+});
+
+test('the web implements every method of the API', () => {
+  const web = read('src/web.ts');
+  for (const method of api) {
+    assert.match(web, new RegExp(`^  async ${method}\\(`, 'm'), `src/web.ts has no ${method}()`);
+  }
+});
+
+test('the web-only methods say so where they are declared, and neither native plugin mentions them', () => {
+  for (const method of webOnly) {
+    const doc = definitions.match(new RegExp(`/\\*\\*((?:(?!\\*/)[\\s\\S])*)\\*/\\s+${method}\\(`));
+    assert.ok(doc, `src/definitions.ts has no JSDoc for ${method}()`);
+    assert.match(doc[1], /Web only\./, `${method}() is not documented as web only`);
+    assert.match(doc[1], /UNIMPLEMENTED/, `${method}() does not say what Android and iOS answer`);
+    assert.doesNotMatch(swift, new RegExp(`\\b${method}\\b`), `iOS mentions ${method}`);
+    assert.doesNotMatch(kotlin, new RegExp(`\\b${method}\\b`), `Android mentions ${method}`);
+  }
 });
 
 test('the plugin has the same name in JavaScript, Swift and Kotlin', () => {

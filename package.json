@@ -1,7 +1,7 @@
 {
   "name": "capacitor-google-tag-manager",
-  "version": "0.2.0",
-  "description": "Brings the Google Tag Manager SDK into a Capacitor app on Android and iOS, with its preview activity, so a container shipped with the app is loaded",
+  "version": "0.3.0",
+  "description": "Brings the Google Tag Manager SDK into a Capacitor app on Android and iOS, with its preview activity, so a container shipped with the app is loaded, and gtm.js with its data layer on the web",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
   "types": "dist/esm/index.d.ts",
@@ -66,14 +66,15 @@
     "@ionic/eslint-config": "^0.5.0",
     "@ionic/prettier-config": "^4.0.0",
     "@ionic/swiftlint-config": "^2.0.0",
+    "@vitest/coverage-v8": "^5.1.0",
     "eslint": "^10.14.0",
+    "jsdom": "^31.0.1",
     "prettier": "^3.6.2",
     "prettier-plugin-java": "^2.7.7",
     "rimraf": "^6.1.0",
     "rollup": "^4.53.2",
     "swiftlint": "^2.0.0",
     "typescript": "~6.0.3",
-    "@vitest/coverage-v8": "^5.1.0",
     "vitest": "^5.1.0"
   },
   "peerDependencies": {
