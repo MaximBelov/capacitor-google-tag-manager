@@ -1,6 +1,6 @@
 {
   "name": "capacitor-google-tag-manager",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Brings the Google Tag Manager SDK into a Capacitor app on Android and iOS, with its preview activity, so a container shipped with the app is loaded",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
