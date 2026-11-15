@@ -49,4 +49,9 @@ There is a `prepublishOnly` hook in `package.json` which prepares the plugin bef
 npm publish
 ```
 
+The Tag Manager SDK is pinned on Android in `android/build.gradle` (`playServicesTagManagerVersion`).
+`.github/workflows/pins.yaml` opens a pull request every Monday when a newer stable release is out, which needs Settings >
+Actions > General > "Allow GitHub Actions to create and approve pull requests" (`node scripts/check-pins.mjs` says where it
+stands).
+
 > **Note**: The [`files`](https://docs.npmjs.com/cli/v7/configuring-npm/package-json#files) array in `package.json` specifies which files get published. If you rename files/directories or add files elsewhere, you may need to update it.
